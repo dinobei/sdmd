@@ -1,0 +1,3 @@
+#pragma once
+
+#define sdmd_version "@VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_PATCH@.@VERSION_TWEAK@"
