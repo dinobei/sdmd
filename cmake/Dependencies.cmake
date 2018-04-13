@@ -14,5 +14,5 @@ else()
     list(APPEND sdmd_include_directories ${PROJECT_SOURCE_DIR}/third_party/coreutils/coreutils)
 endif()
 
-find_package( OpenCV REQUIRED )
+find_package( OpenCV QUIET )
 list(APPEND sdmd_library_dependencies ${OpenCV_LIBS})
