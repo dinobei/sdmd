@@ -23,19 +23,15 @@ namespace ijoon {
         int sgn(int a);
         void createMean(unsigned char *I0);
         void deleteMean();
-        void updateMean(unsigned char *I, unsigned char *M);
 
         void createDelta();
         void deleteDelta();
-        void updateDelta(unsigned char *delta, unsigned char *I, unsigned char *M);
 
         void createVariance();
         void deleteVariance();
-        void updateVariance(unsigned char *V, unsigned char *delta);
 
         void createDifference();
         void deleteDifference();
-        int updateDifference();
 
     private: // inner variable
         unsigned char *M; // Background

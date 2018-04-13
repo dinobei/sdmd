@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
             printf("avg time : %lf\n", avg);
         }
 
-
         if(cvWaitKey(33) >= 27)
             break;
 

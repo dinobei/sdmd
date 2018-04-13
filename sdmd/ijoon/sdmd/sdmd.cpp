@@ -1,7 +1,5 @@
 #include "sdmd.h"
-#include <stdio.h>
 #include <string.h>
-#include <iostream>
 
 ijoon::sdmd::sdmd(unsigned char *I, unsigned int imageSize)
  : M(nullptr), delta(nullptr), V(nullptr), D(nullptr),
@@ -44,20 +42,8 @@ void ijoon::sdmd::deleteMean() {
     }
 }
 
-void ijoon::sdmd::updateMean(unsigned char *I, unsigned char *M) {
-    for(int x = 0 ; x < imageSize ; x+=stride) {
-        M[x] = crop(M[x] + sgn(I[x]-M[x]));
-    }
-}
-
 void ijoon::sdmd::createDelta() {
     delta = new unsigned char[imageSize];
-}
-
-void ijoon::sdmd::updateDelta(unsigned char *delta, unsigned char *I, unsigned char *M) {
-    for(int x = 0 ; x < imageSize ; x+=stride) {
-        delta[x] = abs(((int)M[x]-I[x]));
-    }
 }
 
 void ijoon::sdmd::deleteDelta() {
@@ -77,14 +63,6 @@ void ijoon::sdmd::deleteVariance() {
     }
 }
 
-void ijoon::sdmd::updateVariance(unsigned char *V, unsigned char *delta) {
-    for(int x = 0 ; x < imageSize ; x+=stride) {
-        if(delta[x] != 0x00) {
-            V[x] = crop(V[x] + sgn((int)N*delta[x] - V[x]));
-        }
-    }
-}
-
 void ijoon::sdmd::createDifference() {
     D = new unsigned char[imageSize];
 }
@@ -95,9 +73,17 @@ void ijoon::sdmd::deleteDifference() {
     }
 }
 
-int ijoon::sdmd::updateDifference() {
+int ijoon::sdmd::update(unsigned char *I) {
     int motion_pixel = 0;
     for(int x = 0 ; x < imageSize ; x+=stride) {
+        const int deviation = I[x]-M[x];
+        M[x] = crop(M[x] + sgn(deviation));
+        delta[x] = abs((deviation));
+
+        if(delta[x] != 0x00) {
+            V[x] = crop(V[x] + sgn(N*delta[x] - V[x]));
+        }
+
         if(delta[x] < V[x]) {
             D[x] = 0xff;
         }
@@ -107,15 +93,7 @@ int ijoon::sdmd::updateDifference() {
         }
     }
 
-    return (int)((float)motion_pixel/(imageSize/stride) * 100.);
-}
-
-int ijoon::sdmd::update(unsigned char *I) {
-    updateMean(I, M);
-    updateDelta(delta, I, M);
-    updateVariance(V, delta);
-
-    return updateDifference();
+    return (int)((float)motion_pixel/(imageSize/stride) * 100.f);
 }
 
 unsigned char *ijoon::sdmd::getMean() {
