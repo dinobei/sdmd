@@ -1,17 +1,6 @@
 find_package(coreutils QUIET)
 if(Coreutils_FOUND)
     message("coreutils found : " ${coreutils_INCLUDE_DIRS})
-else()
-    message("Can not find coreutils. Using thirdparty dir.")
-
-    set(coreutils_lib_name libcoreutils.a)
-    if(WIN32)
-        set(coreutils_lib_name coreutils.lib)
-    endif()
-    add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/coreutils)
-    message("coreutils_include_directories: ${coreutils_include_directories}")
-    list(APPEND sdmd_library_dependencies ${PROJECT_BINARY_DIR}/third_party/coreutils/bin/$<CONFIG>/${coreutils_lib_name})
-    list(APPEND sdmd_include_directories ${PROJECT_SOURCE_DIR}/third_party/coreutils/coreutils)
 endif()
 
 find_package( OpenCV QUIET )
